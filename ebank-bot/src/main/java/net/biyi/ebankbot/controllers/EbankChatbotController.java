@@ -1,5 +1,6 @@
 package net.biyi.ebankbot.controllers;
 
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.http.MediaType;
 import net.biyi.ebankbot.agents.EbankAIAgent;
 import org.springframework.ai.chat.client.ChatClient;
@@ -23,6 +24,6 @@ public class EbankChatbotController {
 
     @GetMapping(value= "/chat" , produces = MediaType.TEXT_PLAIN_VALUE)
     public String chat(@RequestParam(name="query", defaultValue = "Bonjour") String query){
-        return ebankAIAgent.chat(query);
+        return ebankAIAgent.chat(new Prompt(query));
     }
 }
