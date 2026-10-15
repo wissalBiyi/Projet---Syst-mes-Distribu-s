@@ -85,3 +85,53 @@ La passerelle d'API sert de point d'entrée unique pour toutes les requêtes cli
 
 ## 4. Conclusion
 Cette première étape a permis de valider la mise en place d'une architecture microservices robuste avec Spring Boot et Spring Cloud. La communication inter-services via OpenFeign, la centralisation du routage par la Gateway et la tolérance aux pannes avec Resilience4J sont pleinement fonctionnelles.
+
+____
+## 5. Partie 2 : Implémentation de l'Agent IA, MCP et Bots Multi-Plateformes
+
+### A. Tests Initiaux et Limite du Stateless (Sans Mémoire)
+1. **Interrogation générale :** Test initial du chatbot en interrogeant l'agent sur une question ouverte (ex: *"C'est quoi Marrakech"* via l'API REST) pour valider le bon fonctionnement du modèle de langage et des réponses textuelles.
+
+   ![Test initial Marrakech](./images/img15.png)
+
+2. **Constat de l'absence de mémoire :** Par défaut, un LLM est *stateless* (sans état) et ne conserve aucun historique des requêtes précédentes. Si l'on envoie un message de salutation (`"Bonjour"`), puis que l'on se présente (`"Bonjour je m'appelle Wissal"`), et qu'ensuite on demande *"c'est quoi mon nom"*, l'agent se montre incapable de s'en souvenir.
+
+   ![ Test Bonjour](./images/img16.png)
+   ![Bonjour je m'appelle Wissal](./images/img17.png)
+   ![Test sans mémoire (Nom oublié)](./images/img18.png)
+
+---
+
+### B. Ajout de la Mémoire Contextuelle (`ChatMemory`)
+Pour contourner la nature *stateless* du LLM, nous avons intégré un mécanisme de gestion de la mémoire conversationnelle (`ChatMemory`) au sein de l'agent IA.
+- **Validation de la mémoire :** Après l'intégration de `ChatMemory`, l'agent retient le contexte de la conversation. Lorsque l'on réitère la question *"c'est quoi mon nom"*, l'agent s'en rappelle et répond avec succès : *"Votre nom est Wissal"*.
+
+  ![Test avec ChatMemory (Nom retrouvé)](./images/img19.png)
+
+---
+
+### C. Connexion via le Model Context Protocol (MCP)
+Le protocole **MCP** est mis en œuvre pour connecter l'agent intelligent du bot (`ebank-bot` sur le port `8058`) aux micro-services métiers (`customer-service` et `ebank-service`), permettant à l'IA d'interagir dynamiquement avec les données bancaires et clients de l'application distribuée.
+
+---
+
+### D. Intégration et Tests des Clients Multi-Plateformes (Telegram et Discord)
+
+1. **Client Telegram (`@eb_wissal_bot`) :**
+    - Configuration et génération du token sécurisé via **BotFather**.
+    - Le bot relaie les interactions en temps réel avec l'agent IA tout en gérant les indicateurs d'action de frappe (`ActionType.TYPING`).
+
+   ![Création du bot sur Telegram via BotFather](./images/img20.png)
+
+2. **Client Discord (`ebank-app`) :**
+    - Enregistrement de l'application sur le portail développeur Discord et attribution des permissions d'interaction.
+    - Ajout et autorisation du bot sur le serveur Discord personnel (*"Serveur de Wissal Biyi"*).
+
+   ![Configuration et autorisation Discord](./images/img21.png)
+   ![Ajout au serveur Discord](./images/img22.png)
+----
+## 7. Conclusion de la Partie 2
+
+Cette seconde partie a permis d'enrichir l'architecture microservices eBanking en y intégrant une couche d'intelligence artificielle générative moderne et performante. Grâce au couplage de **Spring AI** avec le modèle Grok et l'utilisation du protocole **MCP**, le chatbot est désormais capable d'interagir dynamiquement avec les données des différents services métiers.
+
+L'implémentation de la mémoire conversationnelle (**`ChatMemory`**) a résolu la problématique inhérente au caractère *stateless* des LLM, garantissant ainsi un suivi contextuel fluide et personnalisé des échanges avec l'utilisateur. Enfin, le déploiement multi-plateforme à travers l'API REST (Swagger), le bot **Telegram** et l'intégration **Discord** démontre la robustesse, la flexibilité et l'interopérabilité de la solution distribuée mise en place.
