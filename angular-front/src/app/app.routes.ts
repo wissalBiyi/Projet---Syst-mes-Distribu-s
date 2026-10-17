@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import { Accounts } from './accounts/accounts';
+import {Accounts} from './accounts/accounts';
+import {BotUi} from './bot-ui/bot-ui';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'accounts', pathMatch: 'full' }, // Redirection par défaut
-  { path: 'accounts', component: Accounts }
+  {path : "accounts" , component : Accounts},
+  {path : "bot" , component : BotUi}
 ];

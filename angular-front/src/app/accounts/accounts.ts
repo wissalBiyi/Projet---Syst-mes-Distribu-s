@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { Observable, catchError, map, of } from 'rxjs';
+import {Loading} from '../services/loading';
 
 export enum RequestStatus {
   LOADING = 'LOADING',
@@ -24,6 +25,7 @@ export interface AccountListState {
 })
 export class Accounts {
   private http = inject(HttpClient);
+  public loadingService = inject(Loading);
 
   // Exposer l'enum pour qu'elle soit accessible dans le fichier HTML
   protected readonly RequestStatus = RequestStatus;
