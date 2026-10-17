@@ -1,9 +1,7 @@
 import { Routes } from '@angular/router';
-
-import {Accounts} from './accounts/accounts';
-
+import { Accounts } from './accounts/accounts';
 
 export const routes: Routes = [
-  {path : "accounts" , component : Accounts},
-
+  { path: '', redirectTo: 'accounts', pathMatch: 'full' }, // Redirection par défaut
+  { path: 'accounts', component: Accounts }
 ];
